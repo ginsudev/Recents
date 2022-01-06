@@ -36,9 +36,11 @@ class SpringBoardHook: ClassHook<UIApplication> {
 
     func frontDisplayDidChange(_ display: AnyObject?) {
         orig.frontDisplayDidChange(display)
-        
-        if (display != nil && ((display?.isKind(of: SBApplication.self)) != nil)) {
+
+        if (display != nil && display is SBApplication) {
+            
             let first_id: String = (display as! SBApplication).bundleIdentifier
+            
             
             let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_recentApps") ?? ["", "", "", ""]
             

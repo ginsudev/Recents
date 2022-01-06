@@ -11,7 +11,6 @@ import RecentsC
 final class RecentsGlobalData: NSObject {
     static let sharedInstance = RecentsGlobalData()
     
-    var windowShowing: Bool!
     var currentIDS = NSMutableArray()
     
     private override init() { }

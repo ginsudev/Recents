@@ -6,5 +6,5 @@ Description: Show recently opened apps on the Home Screen!
 Maintainer: Ginsu
 Author: Ginsu
 Section: Tweaks
-Depends: ${ORION}, firmware (>= 12.2)
+Depends: dev.theos.orion14, firmware (>= 14.0)
 Depiction: https://ginsudev.github.io/repo/depictions/recents/index.html
