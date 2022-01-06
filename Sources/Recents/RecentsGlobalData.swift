@@ -29,7 +29,7 @@ final class RecentsGlobalData: NSObject {
                                         scale: UIScreen.main.scale,
                                         continuousCornerRadius: 12)
         
-        let img: UIImage? = icon.generateImage(with: imageInfo) as? UIImage
+        let img = icon.generateImage(with: imageInfo) as? UIImage
         return img
     }
 }
