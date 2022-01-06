@@ -1,0 +1,18 @@
+#!/bin/bash
+
+echo "==========================================="
+echo ""
+FILE=/Applications/Sileo.app/Sileo
+if test -f "$FILE"; then
+echo "[ ! ] Newer uicache version detected..."
+echo "[ ! ] Refreshing icons..." & uicache --path /Applications/Recents.app/
+else
+echo "[ ! ] Refreshing icons..." & uicache
+fi
+echo ""
+echo "Thanks for using Recents."
+echo "Follow me on Twitter: @ginsudev."
+echo ""
+echo "==========================================="
+
+exit 0

@@ -1,0 +1,10 @@
+Package: com.ginsu.recents
+Name: Recents
+Version: 0.0.1
+Architecture: iphoneos-arm
+Description: Show recently opened apps on the Home Screen!
+Maintainer: Ginsu
+Author: Ginsu
+Section: Tweaks
+Depends: ${ORION}, firmware (>= 12.2)
+Depiction: https://ginsudev.github.io/repo/depictions/recents/index.html
