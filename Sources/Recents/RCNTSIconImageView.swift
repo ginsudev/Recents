@@ -89,7 +89,7 @@ class RCNTSIconImageView: SBIconImageView {
     @objc func setIcons() {
         
         let array = UserDefaults.standard.stringArray(forKey: "Recents_recentApps") ?? []
-        guard array.count > 1 else {
+        if array.count < 1 {
             return
         }
         
