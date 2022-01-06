@@ -6,11 +6,13 @@ import UIKit
 class SBApplicationInfoHook: ClassHook<SBApplicationInfo> {
     
     func iconClass() -> AnyClass {
-        if target.bundleIdentifier == "com.ginsu.recentsapp" {
+        
+        //Use our subclass instead of SBApplicationIcon.
+        guard target.bundleIdentifier != "com.ginsu.recentsapp" else {
             return NSClassFromString("Recents.RCNTSApplicationIcon")!
-        } else {
-            return orig.iconClass()
         }
+        
+        return orig.iconClass()
     }
 }
 
@@ -19,8 +21,9 @@ class SBIconImageViewHook: ClassHook<SBIconImageView> {
     func contentsImage() -> UIImage? {
         let img = orig.contentsImage()
         
-        let icon = (target.icon as? SBApplicationIcon)
-        if icon?.sbh_iconLibraryItemIdentifier == "com.ginsu.recentsapp" {
+        //Hides the default icon image for our app only.
+        let icon = target.icon as? SBApplicationIcon
+        guard icon?.sbh_iconLibraryItemIdentifier != "com.ginsu.recentsapp" else {
             return nil
         }
         
@@ -43,7 +46,7 @@ class SpringBoardHook: ClassHook<UIApplication> {
         
         let first_id  = display.bundleIdentifier as String
         
-        let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_recentApps") ?? ["", "", "", ""]
+        let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["", "", "", ""]
         
         for i in defaults_array {
             array.append(i)
@@ -58,7 +61,7 @@ class SpringBoardHook: ClassHook<UIApplication> {
             }
         }
         
-        UserDefaults.standard.set(array, forKey: "Recents_recentApps")
+        UserDefaults.standard.set(array, forKey: "Recents_app_bundle_identifiers")
         NotificationCenter.default.post(name: NSNotification.Name("Recents_UpdateIcons"), object: nil)
     }
 }

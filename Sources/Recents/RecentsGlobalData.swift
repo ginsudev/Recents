@@ -15,8 +15,8 @@ final class RecentsGlobalData: NSObject {
     
     func iconFromBundleID(_ id: String) -> UIImage? {
         
-        // If the App ID Is empty or the app is "Spotlight", return the question-mark symbol
-        if id.isEmpty || id.contains("com.apple.Spotlight") {
+        // If the App ID Is empty, return the question-mark symbol
+        if id.isEmpty {
             return UIImage(systemName: "questionmark.app.fill")
         }
         

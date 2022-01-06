@@ -15,12 +15,6 @@ class RCNTSIconImageView: SBIconImageView {
     private var imageView3: UIImageView!
     private var imageView4: UIImageView!
     
-    private var img1: UIImage?
-    private var img2: UIImage?
-    private var img3: UIImage?
-    private var img4: UIImage?
-
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -82,29 +76,17 @@ class RCNTSIconImageView: SBIconImageView {
     
     override func didMoveToWindow() {
         super.didMoveToWindow()
-
         setIcons()
     }
     
     @objc func setIcons() {
         
-        let array = UserDefaults.standard.stringArray(forKey: "Recents_recentApps") ?? []
-        if array.count < 1 {
-            return
-        }
-        
+        let array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["", "", "", ""]
         let global = RecentsGlobalData.sharedInstance
         
-        img1 = global.iconFromBundleID(array[0]) ?? global.iconFromBundleID("")
-        imageView1.image = img1
-        
-        img2 = global.iconFromBundleID(array[1]) ?? global.iconFromBundleID("")
-        imageView2.image = img2
-        
-        img3 = global.iconFromBundleID(array[2]) ?? global.iconFromBundleID("")
-        imageView3.image = img3
-        
-        img4 = global.iconFromBundleID(array[3]) ?? global.iconFromBundleID("")
-        imageView4.image = img4
+        imageView1.image = global.iconFromBundleID(array[0])
+        imageView2.image = global.iconFromBundleID(array[1])
+        imageView3.image = global.iconFromBundleID(array[2])
+        imageView4.image = global.iconFromBundleID(array[3])
     }
 }
