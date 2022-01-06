@@ -11,16 +11,13 @@ import RecentsC
 final class RecentsGlobalData: NSObject {
     static let sharedInstance = RecentsGlobalData()
     
-    var currentIDS = NSMutableArray()
-    
     private override init() { }
     
     func iconFromBundleID(_ id: String) -> UIImage? {
-
-        if (id.contains(" ") || !(id.count > 0) || id.contains("com.apple.Spotlight")) {
-            if #available(iOS 13.0, *) {
-                return UIImage(systemName: "questionmark.app.fill") ?? nil
-            }
+        
+        // If the App ID Is empty or the app is "Spotlight", return the question-mark symbol
+        if id.isEmpty || id.contains("com.apple.Spotlight") {
+            return UIImage(systemName: "questionmark.app.fill")
         }
         
         let icon: SBIcon = SBIconController.sharedInstance().model.expectedIcon(forDisplayIdentifier: id)
