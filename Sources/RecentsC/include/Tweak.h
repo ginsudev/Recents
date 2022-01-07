@@ -63,3 +63,7 @@ struct SBIconImageInfo {
 +(id)sharedApplication;
 -(BOOL)launchApplicationWithIdentifier:(id)arg1 suspended:(BOOL)arg2;
 @end
+
+@interface UIView (Private)
+- (UIViewController *)_viewControllerForAncestor;
+@end

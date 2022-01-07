@@ -56,7 +56,7 @@ class SpringBoardHook: ClassHook<UIApplication> {
         
         let first_id  = display.bundleIdentifier as String
         
-        let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["", "", "", ""]
+        let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["com.apple.Preferences", "com.apple.Health", "com.apple.AppStore", "com.apple.MobileSMS"]
         
         for i in defaults_array {
             array.append(i)
@@ -70,14 +70,17 @@ class SpringBoardHook: ClassHook<UIApplication> {
             let range = 10...(array.endIndex - 1)
             array.removeSubrange(range)
         }
-        
+
+        array = array.filter({$0 != ""})
         NSLog("[RecentsApp]: \(array)")
-        
+                
         UserDefaults.standard.set(array, forKey: "Recents_app_bundle_identifiers")
         NotificationCenter.default.post(name: NSNotification.Name("Recents_UpdateIcons"), object: nil)
     }
 }
 
+
+//MARK: - Icon tap actions
 class SBLeafIconHook: ClassHook<SBLeafIcon> {
     typealias Group = tweak
 
@@ -100,6 +103,32 @@ class SBLeafIconHook: ClassHook<SBLeafIcon> {
             orig.launchFromLocation(arg1, context: arg2)
         }
     }
+}
+
+//MARK: - Dismiss by gesture / home button press
+class SBFluidSwitcherGestureManagerHook: ClassHook<NSObject> {
+    static var targetName: String = "SBFluidSwitcherGestureManager"
+    
+    func _handleSwitcherPanGestureBegan(_ gesture: UIPanGestureRecognizer) {
+        orig._handleSwitcherPanGestureBegan(gesture)
+        NotificationCenter.default.post(name: NSNotification.Name("Recents_Dismiss"), object: nil)
+    }
+    
+}
+
+class SBMainSwitcherViewControllerHook: ClassHook<NSObject> {
+    static var targetName: String = "SBMainSwitcherViewController"
+    
+    func handleHomeButtonPress() -> Bool {
+        NotificationCenter.default.post(name: NSNotification.Name("Recents_Dismiss"), object: nil)
+        return orig.handleHomeButtonPress()
+    }
+    
+    func handleHomeButtonDoublePress() -> Bool {
+        NotificationCenter.default.post(name: NSNotification.Name("Recents_Dismiss"), object: nil)
+        return orig.handleHomeButtonDoublePress()
+    }
+    
 }
 
 //MARK: - Prefs

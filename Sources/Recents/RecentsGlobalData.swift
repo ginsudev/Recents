@@ -10,7 +10,7 @@ import RecentsC
 
 final class RecentsGlobalData: NSObject {
     static let sharedInstance = RecentsGlobalData()
-    
+        
     private override init() { }
     
     func iconFromBundleID(_ id: String) -> UIImage? {

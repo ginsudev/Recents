@@ -13,7 +13,7 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     private var titleLabel: UILabel!
     private var appCollectionView: UICollectionView!
     
-    private var appsArray = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["", "", "", ""]
+    private var appsArray = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["com.apple.Preferences", "com.apple.Health", "com.apple.AppStore", "com.apple.MobileSMS"]
     
     //Grid config
     private var numberOfItemsInRow: Int {
@@ -87,6 +87,7 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         let selected = collectionView.cellForItem(at: indexPath) as! RCNTSCollectionViewCell
         RecentsGlobalData.sharedInstance.openAppFromBundleID(selected.bundleID)
         collectionView.deselectItem(at: indexPath, animated: false)
+        self._viewControllerForAncestor().dismiss(animated: true, completion: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
