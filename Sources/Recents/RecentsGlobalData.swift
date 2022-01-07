@@ -29,4 +29,8 @@ final class RecentsGlobalData: NSObject {
         let img = icon.generateImage(with: imageInfo) as? UIImage
         return img
     }
+    
+    func openAppFromBundleID(_ id: String) {
+        (UIApplication.shared as? SpringBoard)?.launchApplication(withIdentifier: id, suspended: false)
+    }
 }

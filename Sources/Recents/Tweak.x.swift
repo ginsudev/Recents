@@ -2,8 +2,16 @@ import Orion
 import RecentsC
 import UIKit
 
+struct localSettings {
+    static var isEnabled: Bool!
+    static var prefersApplibrary: Bool!
+}
+
+struct tweak: HookGroup {}
+
 //MARK: - Setting our icon
 class SBApplicationInfoHook: ClassHook<SBApplicationInfo> {
+    typealias Group = tweak
     
     func iconClass() -> AnyClass {
         
@@ -17,7 +25,8 @@ class SBApplicationInfoHook: ClassHook<SBApplicationInfo> {
 }
 
 class SBIconImageViewHook: ClassHook<SBIconImageView> {
-    
+    typealias Group = tweak
+
     func contentsImage() -> UIImage? {
         let img = orig.contentsImage()
         
@@ -33,6 +42,7 @@ class SBIconImageViewHook: ClassHook<SBIconImageView> {
 
 //MARK: - Recent app cycling and logging
 class SpringBoardHook: ClassHook<UIApplication> {
+    typealias Group = tweak
     static var targetName: String = "SpringBoard"
     
     @Property(.nonatomic, .retain) var array = [String]()
@@ -54,12 +64,14 @@ class SpringBoardHook: ClassHook<UIApplication> {
         
         if !array.contains(first_id) {
             array.insert(first_id, at: 0)
-            
-            if array.count > 4 {
-                let range = 4...(array.endIndex - 1)
-                array.removeSubrange(range)
-            }
         }
+        
+        if array.count > 10 {
+            let range = 10...(array.endIndex - 1)
+            array.removeSubrange(range)
+        }
+        
+        NSLog("[RecentsApp]: \(array)")
         
         UserDefaults.standard.set(array, forKey: "Recents_app_bundle_identifiers")
         NotificationCenter.default.post(name: NSNotification.Name("Recents_UpdateIcons"), object: nil)
@@ -67,12 +79,20 @@ class SpringBoardHook: ClassHook<UIApplication> {
 }
 
 class SBLeafIconHook: ClassHook<SBLeafIcon> {
-    
+    typealias Group = tweak
+
     func launchFromLocation(_ arg1: AnyObject, context arg2: AnyObject) {
         if (target.sbh_iconLibraryItemIdentifier == "com.ginsu.recentsapp") {
             
-            let controller: SBHIconManager = SBIconController.sharedInstance().iconManager
-            SBIconController.sharedInstance().presentLibraryOverlay(forIconManager: controller)
+            if localSettings.prefersApplibrary {
+                let controller: SBHIconManager = SBIconController.sharedInstance().iconManager
+                SBIconController.sharedInstance().presentLibraryOverlay(forIconManager: controller)
+            } else {
+                let keyWindow = UIApplication.shared.windows.first(where: {$0.isKeyWindow})
+                let rootVC = keyWindow?.rootViewController
+                let recentsVC = RCNTSViewController()
+                rootVC?.present(recentsVC, animated: true, completion: nil)
+            }
             
             return
             
@@ -80,5 +100,40 @@ class SBLeafIconHook: ClassHook<SBLeafIcon> {
             orig.launchFromLocation(arg1, context: arg2)
         }
     }
+}
+
+//MARK: - Prefs
+
+func readPrefs() {
     
+    let path = "/var/mobile/Library/Preferences/com.ginsu.recentsprefs.plist"
+    
+    if (!FileManager().fileExists(atPath: path)) {
+        try? FileManager().copyItem(atPath: "Library/PreferenceBundles/recentsprefs.bundle/defaults.plist", toPath: path)
+    }
+    
+    let dict = NSDictionary(contentsOfFile: path)
+    
+    //Reading values
+    
+    if (dict?.value(forKey: "isEnabled") != nil) {
+        localSettings.isEnabled = dict?.value(forKey: "isEnabled") as? Bool
+    } else {
+        localSettings.isEnabled = true
+    }
+    
+    if (dict?.value(forKey: "ALMode") != nil) {
+        localSettings.prefersApplibrary = dict?.value(forKey: "ALMode") as? Bool
+    } else {
+        localSettings.prefersApplibrary = false
+    }
+}
+
+struct lockapps: Tweak {
+    init() {
+        readPrefs()
+        if (localSettings.isEnabled) {
+            tweak().activate()
+        }
+    }
 }

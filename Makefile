@@ -1,8 +1,8 @@
 ARCHS = arm64 arm64e
-THEOS_DEVICE_IP = localhost -p 2222
+THEOS_DEVICE_IP = 192.168.1.106 #localhost -p 2222
 INSTALL_TARGET_PROCESSES = SpringBoard
 TARGET = iphone:clang:14.4:13
-PACKAGE_VERSION = 1.0.0-b3
+PACKAGE_VERSION = 1.1-b1
 
 include $(THEOS)/makefiles/common.mk
 
@@ -15,4 +15,5 @@ Recents_CFLAGS = -fobjc-arc -ISources/RecentsC/include
 
 include $(THEOS_MAKE_PATH)/tweak.mk
 SUBPROJECTS += recents
+SUBPROJECTS += recentsprefs
 include $(THEOS_MAKE_PATH)/aggregate.mk

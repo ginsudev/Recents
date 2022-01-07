@@ -58,3 +58,8 @@ struct SBIconImageInfo {
 + (instancetype)materialViewWithRecipe:(long long)arg1 configuration:(long long)arg2;
 @property (assign,nonatomic) long long recipe;
 @end
+
+@interface SpringBoard : UIApplication
++(id)sharedApplication;
+-(BOOL)launchApplicationWithIdentifier:(id)arg1 suspended:(BOOL)arg2;
+@end

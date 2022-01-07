@@ -80,13 +80,14 @@ class RCNTSIconImageView: SBIconImageView {
     }
     
     @objc func setIcons() {
-        
-        let array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["", "", "", ""]
-        let global = RecentsGlobalData.sharedInstance
-        
-        imageView1.image = global.iconFromBundleID(array[0])
-        imageView2.image = global.iconFromBundleID(array[1])
-        imageView3.image = global.iconFromBundleID(array[2])
-        imageView4.image = global.iconFromBundleID(array[3])
+        DispatchQueue.main.async {
+            let array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["", "", "", ""]
+            let global = RecentsGlobalData.sharedInstance
+            
+            self.imageView1.image = global.iconFromBundleID(array[0])
+            self.imageView2.image = global.iconFromBundleID(array[1])
+            self.imageView3.image = global.iconFromBundleID(array[2])
+            self.imageView4.image = global.iconFromBundleID(array[3])
+        }
     }
 }
