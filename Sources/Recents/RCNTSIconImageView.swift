@@ -5,7 +5,7 @@
 //  Created by Noah Little on 5/1/2022.
 //
 
-import Foundation
+import UIKit
 import RecentsC
 
 class RCNTSIconImageView: SBIconImageView {
@@ -81,13 +81,27 @@ class RCNTSIconImageView: SBIconImageView {
     
     @objc func setIcons() {
         DispatchQueue.main.async {
-            let array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["", "", "", ""]
+            let array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers_list") ?? ["com.apple.Preferences", "com.apple.Health", "com.apple.AppStore", "com.apple.MobileSMS"]
+            
             let global = RecentsGlobalData.sharedInstance
             
             self.imageView1.image = global.iconFromBundleID(array[0])
+            self.imageView1.contentMode = .scaleAspectFit
+            
             self.imageView2.image = global.iconFromBundleID(array[1])
+            self.imageView2.contentMode = .scaleAspectFit
+
             self.imageView3.image = global.iconFromBundleID(array[2])
+            self.imageView3.contentMode = .scaleAspectFit
+
             self.imageView4.image = global.iconFromBundleID(array[3])
+            self.imageView4.contentMode = .scaleAspectFit
+            
+            for case let imageView as UIImageView in self.subviews {
+                if imageView.image?.isSymbolImage == true {
+                    imageView.tintColor = .white
+                }
+            }
         }
     }
 }

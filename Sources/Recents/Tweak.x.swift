@@ -56,9 +56,9 @@ class SpringBoardHook: ClassHook<UIApplication> {
         
         let first_id  = display.bundleIdentifier as String
         
-        let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers") ?? ["com.apple.Preferences", "com.apple.Health", "com.apple.AppStore", "com.apple.MobileSMS"]
+        let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers_list") ?? ["com.apple.Preferences", "com.apple.Health", "com.apple.AppStore", "com.apple.MobileSMS"]
         
-        for i in defaults_array {
+        for i in defaults_array where !array.contains(i) {
             array.append(i)
         }
         
@@ -71,10 +71,9 @@ class SpringBoardHook: ClassHook<UIApplication> {
             array.removeSubrange(range)
         }
 
-        array = array.filter({$0 != ""})
         NSLog("[RecentsApp]: \(array)")
                 
-        UserDefaults.standard.set(array, forKey: "Recents_app_bundle_identifiers")
+        UserDefaults.standard.set(array, forKey: "Recents_app_bundle_identifiers_list")
         NotificationCenter.default.post(name: NSNotification.Name("Recents_UpdateIcons"), object: nil)
     }
 }
@@ -158,7 +157,7 @@ func readPrefs() {
     }
 }
 
-struct lockapps: Tweak {
+struct recents: Tweak {
     init() {
         readPrefs()
         if (localSettings.isEnabled) {

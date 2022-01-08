@@ -19,6 +19,7 @@ class RCNTSCollectionViewCell: UICollectionViewCell {
                                          y: 0,
                                          width: iconSize,
                                          height: iconSize))
+        icon.contentMode = .scaleAspectFit
         addSubview(icon)
     }
     
@@ -28,6 +29,9 @@ class RCNTSCollectionViewCell: UICollectionViewCell {
     
     func configCellForBundleID(_ id: String) {
         self.icon.image = RecentsGlobalData.sharedInstance.iconFromBundleID(id)
+        if self.icon.image?.isSymbolImage == true {
+            self.icon.tintColor = .white
+        }
         
         self.bundleID = id
     }
