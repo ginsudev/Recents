@@ -8,7 +8,7 @@
 import UIKit
 import RecentsC
 
-class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout, UIGestureRecognizerDelegate {
     private var bgBlur: MTMaterialView!
     private var titleLabel: UILabel!
     private var appCollectionView: UICollectionView!
@@ -53,10 +53,28 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         titleLabel.font = UIFont.boldSystemFont(ofSize: 56)
         titleLabel.textColor = .white
         addSubview(titleLabel)
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissMe))
+        tap.delegate = self
+        tap.numberOfTapsRequired = 1
+        self.addGestureRecognizer(tap)
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        guard touch.view is RCNTSCollectionViewCell else {
+            NSLog("[RecentsApp]: yes")
+            return true
+        }
+        NSLog("[RecentsApp]: no")
+        return false
+    }
+    
+    @objc func dismissMe() {
+        self._viewControllerForAncestor().dismiss(animated: true, completion: nil)
     }
     
     //MARK: - CollectionView

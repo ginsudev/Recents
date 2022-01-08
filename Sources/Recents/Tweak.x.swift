@@ -87,7 +87,10 @@ class SBLeafIconHook: ClassHook<SBLeafIcon> {
             }
             
             let keyWindow = UIApplication.shared.windows.first {$0.isKeyWindow}
-            keyWindow?.rootViewController?.present(RCNTSViewController(), animated: true, completion: nil)
+            let recentsVC = RCNTSViewController()
+            recentsVC.modalPresentationStyle = .fullScreen
+            recentsVC.modalTransitionStyle = .crossDissolve
+            keyWindow?.rootViewController?.present(recentsVC, animated: true, completion: nil)
             return
         }
         
