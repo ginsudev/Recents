@@ -23,7 +23,7 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         return 8
     }
     
-    private var margin = 10
+    private var margin = 10.0
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,17 +36,12 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
                                   left: 20,
                                   bottom: 40,
                                   right: 20)
-        
         let layout: UICollectionViewFlowLayout = UICollectionViewFlowLayout()
         layout.sectionInset = insets
+        
         let collectionFrame = CGRect(x: 0, y: frame.size.height - (self.frame.height/1.5), width: self.frame.width, height: self.frame.height/1.5)
-        
-        appCollectionView = UICollectionView(frame: collectionFrame,
-                                             collectionViewLayout: layout)
-        appCollectionView.register(RCNTSCollectionViewCell.self,
-                                   forCellWithReuseIdentifier: "cell")
-        
-        appCollectionView.center = CGPoint(x: self.center.x, y: appCollectionView.center.y)
+        appCollectionView = UICollectionView(frame: collectionFrame, collectionViewLayout: layout)
+        appCollectionView.register(RCNTSCollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         appCollectionView.backgroundColor = .clear
         appCollectionView.alwaysBounceVertical = true
         appCollectionView.dataSource = self
@@ -64,51 +59,36 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         fatalError("init(coder:) has not been implemented")
     }
     
-    func constraints() {
-        titleLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 50).isActive = true
-        titleLabel.bottomAnchor.constraint(equalTo: self.centerYAnchor, constant: -160).isActive = true
-    }
-    
     //MARK: - CollectionView
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return appsArray.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        
         let cell: RCNTSCollectionViewCell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath) as! RCNTSCollectionViewCell
-        
         cell.configCellForBundleID(appsArray[indexPath.row])
-        
         return cell
     }
         
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let selected = collectionView.cellForItem(at: indexPath) as! RCNTSCollectionViewCell
         RecentsGlobalData.sharedInstance.openAppFromBundleID(selected.bundleID)
-        collectionView.deselectItem(at: indexPath, animated: false)
         self._viewControllerForAncestor().dismiss(animated: true, completion: nil)
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-            
         let flowLayout = collectionViewLayout as! UICollectionViewFlowLayout
-
-        let totalSpace = flowLayout.sectionInset.left
-                + flowLayout.sectionInset.right
-                + (flowLayout.minimumInteritemSpacing * CGFloat(numberOfItemsInRow - 1))
-
-            let size = Int((collectionView.bounds.width - totalSpace) / CGFloat(numberOfItemsInRow))
-
-            return CGSize(width: size, height: size)
+        let totalSpace = flowLayout.sectionInset.left + flowLayout.sectionInset.right + (flowLayout.minimumInteritemSpacing * CGFloat(numberOfItemsInRow - 1))
+        let size = Int((collectionView.bounds.width - totalSpace) / CGFloat(numberOfItemsInRow))
+        return CGSize(width: size, height: size)
     }
 
 
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(margin*2)
+        return margin*2
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumInteritemSpacingForSectionAt section: Int) -> CGFloat {
-        return CGFloat(margin)
+        return margin
     }
 }

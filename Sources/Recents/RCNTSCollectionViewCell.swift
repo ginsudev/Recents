@@ -28,11 +28,11 @@ class RCNTSCollectionViewCell: UICollectionViewCell {
     }
     
     func configCellForBundleID(_ id: String) {
-        self.icon.image = RecentsGlobalData.sharedInstance.iconFromBundleID(id)
-        if self.icon.image?.isSymbolImage == true {
-            self.icon.tintColor = .white
+        icon.image = RecentsGlobalData.sharedInstance.iconFromBundleID(id)!
+        bundleID = id
+
+        if icon.image?.isSymbolImage == true {
+            icon.tintColor = .white
         }
-        
-        self.bundleID = id
     }
 }
