@@ -81,7 +81,7 @@ class RCNTSIconImageView: SBIconImageView {
     
     @objc func setIcons() {
         DispatchQueue.main.async {
-            let array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers_list") ?? ["com.apple.Preferences", "com.apple.Health", "com.apple.AppStore", "com.apple.MobileSMS"]
+            let array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers_list") ?? ["com.apple.Preferences", "com.apple.camera", "com.apple.AppStore", "com.apple.MobileSMS"]
             
             let global = RecentsGlobalData.sharedInstance
             

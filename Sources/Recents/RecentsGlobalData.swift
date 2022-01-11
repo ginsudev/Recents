@@ -11,6 +11,7 @@ import AudioToolbox
 
 final class RecentsGlobalData: NSObject {
     static let sharedInstance = RecentsGlobalData()
+    var title: String!
         
     private override init() { }
     

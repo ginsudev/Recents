@@ -12,8 +12,9 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     private var bgBlur: MTMaterialView!
     private var titleLabel: UILabel!
     private var appCollectionView: UICollectionView!
+    private var clearButton: RCNTSClearButton!
     
-    private var appsArray = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers_list") ?? ["com.apple.Preferences", "com.apple.Health", "com.apple.AppStore", "com.apple.MobileSMS"]
+    private var appsArray = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers_list") ?? ["com.apple.Preferences", "com.apple.camera", "com.apple.AppStore", "com.apple.MobileSMS"]
     
     //Grid config
     private var numberOfItemsInRow: Int {
@@ -48,11 +49,14 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
         appCollectionView.delegate = self
         self.addSubview(appCollectionView)
         
-        titleLabel = UILabel(frame: CGRect(x: 20, y: appCollectionView.frame.minY - 50 - 20, width: self.frame.width, height: 50))
-        titleLabel.text = "Recents"
+        titleLabel = UILabel(frame: CGRect(x: 20, y: appCollectionView.frame.minY - 50 - 20, width: self.frame.width - 80, height: 50))
+        titleLabel.text = RecentsGlobalData.sharedInstance.title
         titleLabel.font = UIFont.boldSystemFont(ofSize: 56)
         titleLabel.textColor = .white
         addSubview(titleLabel)
+        
+        clearButton = RCNTSClearButton(frame: CGRect(x: frame.maxX - 30 - 30, y: titleLabel.frame.midY - 15, width: 30, height: 30))
+        addSubview(clearButton)
         
         let tap = UITapGestureRecognizer(target: self, action: #selector(dismissMe))
         tap.delegate = self
@@ -65,11 +69,9 @@ class RCNTSView: UIView, UICollectionViewDataSource, UICollectionViewDelegate, U
     }
     
     func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
-        guard touch.view is RCNTSCollectionViewCell else {
-            NSLog("[RecentsApp]: yes")
+        guard (touch.view is RCNTSCollectionViewCell) || (touch.view is RCNTSClearButton) else {
             return true
         }
-        NSLog("[RecentsApp]: no")
         return false
     }
     

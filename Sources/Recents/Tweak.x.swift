@@ -55,7 +55,7 @@ class SpringBoardHook: ClassHook<UIApplication> {
         
         let first_id = display.bundleIdentifier as String
         
-        let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers_list") ?? ["com.apple.Preferences", "com.apple.Health", "com.apple.AppStore", "com.apple.MobileSMS"]
+        let defaults_array = UserDefaults.standard.stringArray(forKey: "Recents_app_bundle_identifiers_list") ?? ["com.apple.Preferences", "com.apple.camera", "com.apple.AppStore", "com.apple.MobileSMS"]
         
         for i in defaults_array where !array.contains(i) {
             array.append(i)
@@ -142,6 +142,8 @@ func readPrefs() {
     localSettings.isEnabled = dict.value(forKey: "isEnabled") as? Bool ?? true
     localSettings.prefersApplibrary = dict.value(forKey: "ALMode") as? Bool ?? false
     localSettings.appAmount = dict.value(forKey: "appAmount") as? Int ?? 10
+    RecentsGlobalData.sharedInstance.title = dict.value(forKey: "title") as? String ?? "Recents"
+
 }
 
 struct recents: Tweak {
